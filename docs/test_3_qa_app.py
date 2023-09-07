@@ -23,7 +23,7 @@ from streamlit_chat import message
 HUGGINGFACEHUB_API_TOKEN=os.getenv('HUGGINGFACE_TOKEN')
 OPENAI_API_KEY = os.getenv['OPENAI_API_KEY']
 
-loader=UnstructuredPDFLoader('/Users/beatricecarroll/Documents/GitHub/llm-hackathon/src/data/jane_eyre.pdf')
+loader=UnstructuredPDFLoader('/src/data/jane_eyre.pdf')
 
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 document=loader.load()
