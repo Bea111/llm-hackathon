@@ -20,10 +20,10 @@ from langchain.chains import ConversationalRetrievalChain
 from streamlit_chat import message
 
 
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = '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'
-os.environ['OPENAI_API_KEY']='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'
+HUGGINGFACEHUB_API_TOKEN=os.getenv('HUGGINGFACE_TOKEN')
+OPENAI_API_KEY = os.getenv['OPENAI_API_KEY']
 
-loader=UnstructuredPDFLoader('/content/jane_eyre.pdf')
+loader=UnstructuredPDFLoader('/Users/beatricecarroll/Documents/GitHub/llm-hackathon/src/data/jane_eyre.pdf')
 
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 document=loader.load()
@@ -99,18 +99,16 @@ def conversational_chat(query):
 if 'history' not in st.session_state:
     st.session_state['history'] = []
 
-if 'sources' not in st.sessionß_state:
+if 'sources' not in st.session_state:
     st.session_state['sources']=[]
 
-if 'generated' not in st.session_state:
-    st.session_state['generated'] = ["Hello ! Ask me anything about Jane Eyre 🤗"]
+if 'answer' not in st.session_state:
+    st.session_state['answer'] = ["What do you want to know about Jane Eyre?"]
 
-if 'past' not in st.session_state:
-    st.session_state['past'] = ["Hey ! 👋"]
+if 'context' not in st.session_state:
+    st.session_state['context'] = []
     
-#container for the chat history
 response_container = st.container()
-#container for the user's text input
 container = st.container()
 
 with container:
@@ -122,17 +120,18 @@ with container:
     if submit_button and user_input:
         output = conversational_chat(user_input)
         
-        st.session_state['past'].append(user_input)
-        st.session_state['generated'].append(output)
+        st.session_state['context'].append(user_input)
+        st.session_state['answer'].append(output)
 
-if st.session_state['generated']:
+if st.session_state['answer']:
     with response_container:
-        for i in range(len(st.session_state['generated'])):
-            message(st.session_state["past"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
-            message(st.session_state["generated"][i], key=str(i), avatar_style="thumbs")
-
+        for i in range(len(st.session_state['answer'])):
+            message(st.session_state["context"][i], is_user=True, key=str(i) + '_user', avatar_style="big-smile")
+            message(st.session_state["answer"][i], key=str(i), avatar_style="thumbs")
+st.title('Chat history:')
 st.write(st.session_state['history'])
 
+st.title('Sources:')
 st.write(st.session_state['sources'])
 
 
