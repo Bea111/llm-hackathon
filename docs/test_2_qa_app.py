@@ -6,8 +6,14 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.chains import create_qa_with_sources_chain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationalRetrievalChain
+from langchain import PromptTemplate, HuggingFaceHub, LLMChain
+from langchain.document_loaders import UnstructuredPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains.question_answering import load_qa_chain
+from langchain.embeddings import HuggingFaceEmbeddings
+
 
 HUGGINGFACEHUB_API_TOKEN=os.getenv('HUGGINGFACE_TOKEN')
 
@@ -51,10 +57,7 @@ qa_chain = RetrievalQA(retriever=vectorstore.as_retriever(),
 
 query = "How did Jane wear her hair?"
 
-result = qa_chain({"query": question})
-
-unique_docs = retriever_from_llm.get_relevant_documents(query=question)
-
+result = qa_chain({"query": query})
 
 print(result['result'])
 print(len(result['source_documents']))
