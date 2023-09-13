@@ -43,6 +43,9 @@ nosetests.xml
 coverage.xml
 *.cover
 
+# ignore scraped files
+*.html
+
 # Translations
 *.mo
 *.pot
